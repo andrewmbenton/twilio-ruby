@@ -22,14 +22,13 @@ end
 @account.incoming_phone_numbers.us.local(params={}) #=> a Resources object containing multiple IncomingPhoneNumber resources
 
 # we can "bootstrap" directly into our account object like so...
-@same_account = Twilio::Account.new({:account_sid => 'ACpsodifnpqw', :auth_token => 'ason9234ht9'})
-@account === @same_account #=> true
+@same_account = Twilio::Account.new({:auth_sid => 'ACpsodifnpqw', :auth_token => 'ason9234ht9'})
 
 # that is just a particular case of a general rule when instantiating subclasses of the Twilio module...
 # the following creates a Call object without actually sending an http request. the hash passed in 
 # allows you to create a client object implicitly so that the call object may be "posted" to twilio.
 @call = Twilio::Call.new('4156582358', '4157791897', 'http://example.com/someurl',
-                         {:account_sid => 'ACpsodifnpqw', :auth_token => 'ason9234ht9'})
+                         {:auth_sid => 'ACpsodifnpqw', :auth_token => 'ason9234ht9'})
 # to actually create the call, via http post to twilio, we do
 @call.post # maybe @call.post! is better?
 
