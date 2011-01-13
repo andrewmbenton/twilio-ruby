@@ -9,9 +9,14 @@ module Twilio
 
     def update(params={})
       raise "Can't update a resource without a Twilio::Client" unless @client
-      response = @client.put(@uri, params)
+      response = @client.post(@uri, params)
       set_up_properties_from response
       self
+    end
+
+    def delete
+      raise "Can't delete a resource without a Twilio::Client" unless @client
+      @client.delete(@uri)
     end
 
     def method_missing(method, *args)

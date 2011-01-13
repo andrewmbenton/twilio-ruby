@@ -27,7 +27,7 @@ module Twilio
     def create(params={})
       raise "Can't create a resource without a Twilio::Client" unless @client
       response = @client.post(@uri, params)
-      @instance_class.new("#{@uri}/#{params[:sid]}", @client, response)
+      @instance_class.new("#{@uri}/#{response['sid']}", @client, response)
     end
   end
 end
