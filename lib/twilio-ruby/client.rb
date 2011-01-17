@@ -15,27 +15,31 @@ module Twilio
     
     # Define some helper methods for sending HTTP requests
     [:get, :put, :post, :delete].each do |method|
-      method_class = Net::HTTP.const_get(method.to_s.capitalize)
+      method_class = Net::HTTP.const_get method.to_s.capitalize
       define_method method do |uri, *args|
         uri += '.json'
         params = (args[0] && args[0] != {}) ? twilify(args[0]) : nil
         uri += "?#{url_encode(params)}" if params && method == :get
-        request = method_class.new(uri)
+        request = method_class.new uri
         request.basic_auth @account_sid, @auth_token
-        request.form_data = params if (params && [:post, :put].include?(method))
-        #puts "DEBUG: Request Path ==>   "+request.path
-        #puts "DEBUG: Request Body ==>   "+request.body if request.body
-        http_response = @connection.request(request)
-        object = Crack::JSON.parse http_response.body
+        request.form_data = params if params && [:post, :put].include?(method)
+        puts "DEBUG: Request Path ==>   "+request.path
+        puts "DEBUG: Request Body ==>   "+request.body if request.body
+        http_response = @connection.request request
+        object = Crack::JSON.parse http_response.body if http_response.body
         raise object['message'] unless http_response.kind_of? Net::HTTPSuccess
         object
       end
+    end
+
+    def request(uri, method, params={})
+      send method.downcase.to_sym, uri, params
     end
     
     private
     
     def set_up_connection_to(domain, proxy)
-      @connection = Net::HTTP.new(domain, 443)
+      @connection = Net::HTTP.new domain, 443
       @connection.use_ssl = true
       # Don't check the server cert. Ideally this is configurable, in case an
       # app wants to verify that it is actually talking to the real Twilio.
@@ -45,9 +49,9 @@ module Twilio
     def set_up_subresources
       accounts_uri = "/#{@api_version}/Accounts"
       # Set up a special handle to grab the account.
-      @account = Twilio::Account.new("#{accounts_uri}/#{@account_sid}", self)
+      @account = Twilio::Account.new "#{accounts_uri}/#{@account_sid}", self
       # Set up the accounts subresource.
-      @accounts = Twilio::ListResource.new(:accounts, accounts_uri, self)
+      @accounts = Twilio::Accounts.new accounts_uri, self
     end
     
     def url_encode(hash)
