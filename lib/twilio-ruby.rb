@@ -1,6 +1,5 @@
 require 'net/http'
 require 'net/https'
-require 'rubygems'
 require 'builder'
 require 'crack'
 require 'cgi'
