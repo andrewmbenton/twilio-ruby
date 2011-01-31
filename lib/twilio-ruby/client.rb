@@ -23,8 +23,6 @@ module Twilio
         request = method_class.new uri
         request.basic_auth @account_sid, @auth_token
         request.form_data = params if params && [:post, :put].include?(method)
-        puts "DEBUG: Request Path ==>   "+request.path
-        puts "DEBUG: Request Body ==>   "+request.body if request.body
         http_response = @connection.request request
         object = Crack::JSON.parse http_response.body if http_response.body
         raise object['message'] unless http_response.kind_of? Net::HTTPSuccess
