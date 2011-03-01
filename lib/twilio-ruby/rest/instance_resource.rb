@@ -43,7 +43,7 @@ module Twilio
       def resource(*resources)
         resources.each do |r|
           resource = twilify r
-          relative_uri = r == :sms_messages ? 'SMS/Messages' : resource
+          relative_uri = r == :sms ? 'SMS' : resource
           instance_variable_set("@#{r}",
             Twilio::REST.const_get(resource).new("#{@uri}/#{relative_uri}", @client))
         end

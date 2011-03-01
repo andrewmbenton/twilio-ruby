@@ -1,6 +1,6 @@
 module Twilio
   module REST
-    class SmsMessages < ListResource
+    class Messages < ListResource
       def send(from, to, body)
         create :from => from, :to => to, :body => body
       end
