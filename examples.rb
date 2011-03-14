@@ -49,17 +49,17 @@ end
 ################ SMS MESSAGES ################
 
 # print a list of sms messages (one http request)
-@account.sms_messages.list({:date_sent => '2010-09-01'}).each do |sms|
+@account.sms.messages.list({:date_sent => '2010-09-01'}).each do |sms|
   puts sms.body
 end
 
 # print a particular sms message (one http request)
-puts @account.sms_messages.get('SMXXXXXXXX').body
+puts @account.sms.messages.get('SMXXXXXXXX').body
 
 # send an sms
-@account.sms_messages.create(:from => '+14159341234', :to => '+16105557069', :body => 'Hey there!')
+@account.sms.messages.create(:from => '+14159341234', :to => '+16105557069', :body => 'Hey there!')
 # or, an alias
-@account.sms_messages.send('+14159341234', '+16105557069', 'Hey there!')
+@account.sms.messages.send('+14159341234', '+16105557069', 'Hey there!')
 
 ################ PHONE NUMBERS ################
 
