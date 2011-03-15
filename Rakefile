@@ -1,8 +1,16 @@
-require 'rake'
-require 'spec/rake/spectask'
+require 'rubygems'
+require 'rake/gempackagetask'
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new do |spec|
-  spec.spec_files = FileList['test/*_spec.rb']
-  spec.spec_opts << "--color"
-  spec.libs += ["lib", "test"]
+spec = eval(File.read('twilio-ruby.gemspec'))
+
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
 end
+
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = 'test/*_spec.rb'
+  t.rspec_opts = ['-c']
+end
+
+task :default => :spec
