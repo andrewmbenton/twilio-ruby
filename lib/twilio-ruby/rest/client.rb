@@ -54,7 +54,7 @@ module Twilio
       end
     
       def url_encode(hash)
-        hash.to_a.map {|pair| pair.map {|e| CGI.escape e.to_s}.join '='}.join '&'
+        hash.to_a.map {|p| p.map {|e| CGI.escape e.to_s}.join '='}.join '&'
       end
     end
   end
