@@ -21,7 +21,7 @@ module Twilio
           uri += '.json'
           params = (args[0] && args[0] != {}) ? twilify(args[0]) : nil
           uri += "?#{url_encode(params)}" if params && method == :get
-          request = method_class.new uri, 'User-Agent' => 'twilio-ruby/0.3.3'
+          request = method_class.new uri, 'User-Agent' => 'twilio-ruby/0.4.0'
           request.basic_auth @account_sid, @auth_token
           request.form_data = params if params && [:post, :put].include?(method)
           http_response = @connection.request request
