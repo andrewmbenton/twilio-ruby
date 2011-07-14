@@ -3,14 +3,14 @@ module Twilio
     class Client
       include Utils
 
-      attr_reader :api_version, :domain, :account_sid, :account, :accounts
+      attr_reader :account_sid, :account, :accounts
     
-      def initialize(account_sid, auth_token, api_version='2010-04-01',
-                     domain='api.twilio.com', proxy=nil)
+      def initialize(account_sid, auth_token, domain = 'api.twilio.com',
+                     proxy_host = nil, proxy_port = nil)
         @account_sid = account_sid
         @auth_token = auth_token
-        @api_version = api_version
-        set_up_connection_to domain, proxy
+        @api_version = '2010-04-01'
+        set_up_connection_to domain, proxy_host, proxy_port
         set_up_subresources
       end
     
@@ -19,29 +19,62 @@ module Twilio
         method_class = Net::HTTP.const_get method.to_s.capitalize
         define_method method do |uri, *args|
           uri += '.json'
-          params = (args[0] && args[0] != {}) ? twilify(args[0]) : nil
-          uri += "?#{url_encode(params)}" if params && method == :get
-          request = method_class.new uri, 'User-Agent' => 'twilio-ruby/0.4.0'
+          params = twilify(args[0]); params = {} if params.empty?
+          uri += "?#{url_encode(params)}" if !params.empty? && method == :get
+          headers = {
+            'Accept' => 'application/json',
+            'User-Agent' => 'twilio-ruby/0.5.0'
+          }
+          puts "REQUEST URI ====> #{uri}"
+          request = method_class.new uri, headers
           request.basic_auth @account_sid, @auth_token
-          request.form_data = params if params && [:post, :put].include?(method)
+          request.form_data = params if [:post, :put].include? method
           http_response = @connection.request request
           object = Crack::JSON.parse http_response.body if http_response.body
-          raise object['message'] unless http_response.kind_of? Net::HTTPSuccess
+          if http_response.kind_of? Net::HTTPClientError
+            raise Twilio::REST::RequestError, object['message']
+          elsif http_response.kind_of? Net::HTTPServerError
+            raise Twilio::REST::ServerError, object['message']
+          end
           object
         end
       end
 
-      def request(uri, method, params={})
-        send method.downcase.to_sym, uri, params
+      # Mimic the old interface
+      def request(uri, method = 'POST', params = {})
+        raise ArgumentError, 'Invalid path parameter' if uri.empty?
+
+        uri = "/#{uri}" unless uri.start_with? '/'
+
+        case method
+        when 'GET'
+          uri += "?#{url_encode(params)}" if params
+          req = Net::HTTP::Get.new uri
+        when 'DELETE'
+          req = Net::HTTP::Delete.new uri
+        when 'PUT'
+          req = Net::HTTP::Put.new uri
+          req.form_data = params
+        when 'POST'
+          req = Net::HTTP::Post.new uri
+          req.form_data = params
+        else
+          raise NotImplementedError, "HTTP #{method} not implemented"
+        end
+
+        req.basic_auth @account_sid, @auth_token
+        @connection.request req
       end
     
       private
     
-      def set_up_connection_to(domain, proxy)
-        @connection = Net::HTTP.new domain, 443
+      def set_up_connection_to(domain, proxy_host = nil, proxy_port = nil)
+        connection_class = Net::HTTP::Proxy proxy_host, proxy_port
+        @connection = connection_class.new domain, 443
         @connection.use_ssl = true
-        # Don't check the server cert. Ideally this is configurable, in case an
-        # app wants to verify that it is actually talking to the real Twilio.
+        # Don't check the server cert. Ideally this is configurable in case an
+        # app wants to verify that it's actually talking to the real Twilio.
+        # But cert validation is usually a nightmare, so we skip it for now.
         @connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
     

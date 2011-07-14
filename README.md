@@ -41,9 +41,6 @@ require 'twilio-ruby'
   :to => '+16105557069',
   :body => 'Hey there!'
 )
-
-# or, using an alias
-@client.account.sms.messages.send('+14159341234', '+16105557069', 'Hey there!')
 ```
 
 ### Do Some Stuff With Calls

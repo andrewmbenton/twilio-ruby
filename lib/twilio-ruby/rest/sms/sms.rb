@@ -3,7 +3,7 @@ module Twilio
     class Sms < InstanceResource
       def initialize(uri, client, params={})
         super uri, client, params
-        resource :messages
+        resource :messages, :short_codes
       end
     end
   end
