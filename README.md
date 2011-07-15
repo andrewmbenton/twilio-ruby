@@ -82,6 +82,6 @@ require 'twilio-ruby'
 
 ## More Information
 
-There are more detailed examples in the included [examples.rb](blob/master/examples.rb).
+There are more detailed examples in the included [examples.rb](twilio-ruby/blob/master/examples.rb).
 
-Full [API documentation](wiki/Documentation), as well as an [upgrade guide](wiki/UpgradeGuide) for users of the old twiliolib gem, is available in the [twilio-ruby github wiki](wiki).
+Full [API documentation](twilio-ruby/wiki/Documentation), as well as an [upgrade guide](twilio-ruby/wiki/UpgradeGuide) for users of the old twiliolib gem, is available in the [twilio-ruby github wiki](twilio-ruby/wiki).
