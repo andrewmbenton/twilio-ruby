@@ -16,7 +16,7 @@ $ cd twilio-ruby; rake gem
 $ sudo gem install pkg/twilio-ruby-{version}
 ```
 
-## Some Code
+## Some Code To Get You Started
 
 ### Setup Work
 
@@ -79,3 +79,9 @@ require 'twilio-ruby'
 @number = @numbers[0].phone_number
 @account.incoming_phone_numbers.create(:phone_number => @number)
 ```
+
+## More Information
+
+There are more detailed examples in the included [examples.rb](blob/master/examples.rb).
+
+Full [API documentation](wiki/Documentation), as well as an [upgrade guide](wiki/UpgradeGuide) for users of the old twiliolib gem, is available in the [twilio-ruby github wiki](wiki).
