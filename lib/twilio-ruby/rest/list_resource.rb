@@ -10,8 +10,8 @@ module Twilio
       end
     
       # Grab a list of this kind of resource and return it as an array.
-      def list(params={})
-        raise "Can't get a resource list without a Twilio::Client" unless @client
+      def list(params = {})
+        raise "Can't get a resource list without a REST Client" unless @client
         response = @client.get @uri, params
         resources = response[detwilify(@resource_name)]
         resources.map do |resource|
@@ -25,8 +25,8 @@ module Twilio
       end
     
       # Return a newly created resource.
-      def create(params={})
-        raise "Can't create a resource without a Twilio::Client" unless @client
+      def create(params = {})
+        raise "Can't create a resource without a REST Client" unless @client
         response = @client.post @uri, params
         @instance_class.new "#{@uri}/#{response['sid']}", @client, response
       end
