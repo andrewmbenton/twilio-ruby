@@ -9,6 +9,8 @@ require 'openssl'
 require 'base64'
 
 
+require "#{TWILIO_RUBY_ROOT}/twilio-ruby/util"
+require "#{TWILIO_RUBY_ROOT}/twilio-ruby/util/request_validator"
 require "#{TWILIO_RUBY_ROOT}/twilio-ruby/rest/errors"
 require "#{TWILIO_RUBY_ROOT}/twilio-ruby/rest/utils"
 require "#{TWILIO_RUBY_ROOT}/twilio-ruby/rest/list_resource"

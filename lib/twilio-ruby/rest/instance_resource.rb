@@ -3,12 +3,12 @@ module Twilio
     class InstanceResource
       include Utils
 
-      def initialize(uri, client, params={})
+      def initialize(uri, client, params = {})
         @uri, @client = uri, client
         set_up_properties_from params
       end
 
-      def update(params={})
+      def update(params = {})
         raise "Can't update a resource without a Twilio::Client" unless @client
         response = @client.post @uri, params
         set_up_properties_from response
@@ -44,8 +44,9 @@ module Twilio
         resources.each do |r|
           resource = twilify r
           relative_uri = r == :sms ? 'SMS' : resource
-          instance_variable_set("@#{r}",
-            Twilio::REST.const_get(resource).new("#{@uri}/#{relative_uri}", @client))
+          uri = "#{@uri}/#{relative_uri}"
+          resource_class = Twilio::REST.const_get resource
+          instance_variable_set("@#{r}", resource_class.new(uri, @client))
         end
         self.class.instance_eval {attr_reader *resources}
       end

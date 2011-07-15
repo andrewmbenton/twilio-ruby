@@ -1,7 +1,9 @@
 module Twilio
   module REST
     class Client
-      include Utils
+
+      include Twilio::Util
+      include Twilio::REST::Utils
 
       attr_reader :account_sid, :account, :accounts
     
@@ -9,7 +11,6 @@ module Twilio
                      proxy_host = nil, proxy_port = nil)
         @account_sid = account_sid
         @auth_token = auth_token
-        @api_version = '2010-04-01'
         set_up_connection_to domain, proxy_host, proxy_port
         set_up_subresources
       end
@@ -23,9 +24,8 @@ module Twilio
           uri += "?#{url_encode(params)}" if !params.empty? && method == :get
           headers = {
             'Accept' => 'application/json',
-            'User-Agent' => 'twilio-ruby/0.5.0'
+            'User-Agent' => 'twilio-ruby/1.0.0'
           }
-          puts "REQUEST URI ====> #{uri}"
           request = method_class.new uri, headers
           request.basic_auth @account_sid, @auth_token
           request.form_data = params if [:post, :put].include? method
@@ -40,7 +40,7 @@ module Twilio
         end
       end
 
-      # Mimic the old interface
+      # Mimic the old (deprecated) interface
       def request(uri, method = 'POST', params = {})
         raise ArgumentError, 'Invalid path parameter' if uri.empty?
 
@@ -79,16 +79,14 @@ module Twilio
       end
     
       def set_up_subresources
-        accounts_uri = "/#{@api_version}/Accounts"
+        accounts_uri = '/2010-04-01/Accounts'
+        account_uri = "#{accounts_uri}/#{@account_sid}"
         # Set up a special handle to grab the account.
-        @account = Twilio::REST::Account.new "#{accounts_uri}/#{@account_sid}", self
+        @account = Twilio::REST::Account.new account_uri, self
         # Set up the accounts subresource.
         @accounts = Twilio::REST::Accounts.new accounts_uri, self
       end
     
-      def url_encode(hash)
-        hash.to_a.map {|p| p.map {|e| CGI.escape e.to_s}.join '='}.join '&'
-      end
     end
   end
 end

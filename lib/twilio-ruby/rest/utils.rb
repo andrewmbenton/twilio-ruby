@@ -20,13 +20,6 @@ module Twilio
         end
       end
 
-      def self.validate(auth_token, signature, url, params={})
-        data = url + params.sort.to_s
-        digest = OpenSSL::Digest::Digest.new('sha1')
-        expected = Base64.encode64(OpenSSL::HMAC.digest(digest, auth_token, data)).strip
-        return expected == signature
-      end
-
     end
   end
 end

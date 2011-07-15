@@ -58,8 +58,6 @@ puts @account.sms.messages.get('SMXXXXXXXX').body
 
 # send an sms
 @account.sms.messages.create(:from => '+14159341234', :to => '+16105557069', :body => 'Hey there!')
-# or, an alias
-@account.sms.messages.send('+14159341234', '+16105557069', 'Hey there!')
 
 ################ PHONE NUMBERS ################
 
