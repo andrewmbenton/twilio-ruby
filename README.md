@@ -1,3 +1,17 @@
+# ACHTUNG!
+
+I am no longer actively developing this branch of twilio-ruby. Twilio adopted
+this project as its official Ruby API Library in July 2011 so all development
+work is taking place within the twilio repository located here:
+
+[/twilio/twilio-ruby](/twilio/twilio-ruby)
+
+Luckily the gem name is the same, so existing users shouldn't have noticed.
+
+Most of the below documentation is still valid so I'll leave it around. You
+should really look at the README and documentation at the above url instead
+though.
+
 ## Get Started
 
 To install:
@@ -5,15 +19,7 @@ To install:
 Via rubygems.org:
 
 ```
-$ sudo gem install twilio-ruby
-```
-
-To build and install yourself from the latest source:
-
-```
-$ git clone git@github.com:andrewmbenton/twilio-ruby.git
-$ cd twilio-ruby; rake gem
-$ sudo gem install pkg/twilio-ruby-{version}
+$ gem install twilio-ruby
 ```
 
 ## Some Code To Get You Started
@@ -77,11 +83,11 @@ require 'twilio-ruby'
 
 # buy the first one
 @number = @numbers[0].phone_number
-@account.incoming_phone_numbers.create(:phone_number => @number)
+@client.account.incoming_phone_numbers.create(:phone_number => @number)
 ```
 
 ## More Information
 
-There are more detailed examples in the included [examples.rb](twilio-ruby/blob/master/examples.rb).
+See more detailed examples in [examples.rb](/twilio/twilio-ruby/blob/master/examples.rb) wthin twilio/twilio-ruby.
 
-Full [API documentation](twilio-ruby/wiki/Documentation), as well as an [upgrade guide](twilio-ruby/wiki/UpgradeGuide) for users of the old twiliolib gem, is available in the [twilio-ruby github wiki](twilio-ruby/wiki).
+Full [API documentation](/twilio/twilio-ruby/wiki/Documentation), as well as an [upgrade guide](/twilio/twilio-ruby/wiki/UpgradeGuide) for users of the old twiliolib gem, is available in the [twilio-ruby github wiki](/twilio/twilio-ruby/wiki).
